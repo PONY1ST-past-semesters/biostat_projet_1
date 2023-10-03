@@ -1,0 +1,217 @@
+\documentclass[../main.tex]{subfiles}
+
+\title{Méthodes d'analyse biostatistique \\ 
+Résumé de "Longitudinal data analysis using generalized linear models" écrit par Liang et Zeger \\ 
+(Date limite : le 28 septembre)}
+\author{Wen, Zehai }
+\date{Temps de compilation : \DTMnow}
+
+\begin{document}
+\maketitle
+
+%De plus, pour la première lecture, je vous demande de résumer chacune des sections 1 à 6 de la lecture 1 
+%(4 à 5 lignes pour chaque section, dans VOS mots). Pas besoin d'utiliser des formules, mais si c'est très utile, 
+%vous pouvez les utiliser sans qu'elles comptent dans les lignes. 
+%On peut compter environ 25 à 30 lignes pour le résumé total. N'oubliez pas votre nom en haut du document !
+
+Soit $(\Omega, F, P)$ une espace de probabilité, 
+suffisamment grande pour tous les variables aléatoires considérées dans cette sommaire.
+Dans l'article "Longitudinal data analysis using generalized linear models" écrit par Liang et Zeger \cite{liang_zeger},
+les auteurs modèlent les données longitudinales par une suite $\{Y_i\}_{i=1}^K$ des variables aléatoires indépendentes,
+où chaque $Y_i$ est à valeurs dans $\mathbb{R}^{n}$ et de loi marginale utilisant un modèle linéaire généralisé.
+Plus précisément, si on écrit $Y_i = (Y_{i,1}, \cdots, Y_{i,n})$ et 
+$f_{i,t} : \mathbb{R}^{n} \to \mathbb{R}$ la densité de $Y_{i,t}$ par rapport à une mesure Borel sigma finie $\nu$,
+on présume que, pour toutes les $i \in \{1, \cdots, K\}$ et $t \in \{1, \cdots, n\}$:
+
+\begin{equation*}
+    f_{i,t}(y_{i,t}) = \exp \curly{\phi \squared{y_{i,t} \theta_{i,t} - a(\theta_{i,t}) + b(y_{i,t})}}
+\end{equation*}
+
+Où $a: \mathbb{R} \to \mathbb{R}$ est une fonction deux fois continument différentiable tel que $a'' > 0$,
+$b: \mathbb{R}^{n} \to \mathbb{R}$ est une fonction, $\phi > 0$ est un paramètre de dispersion, 
+$\theta_{i,t} = h(\eta_{i,t})$ pour une fonction de lien $h: \mathbb{R} \to \mathbb{R}$ qui est 
+un monotonique injection différentiable partout, $\eta_{i,t} = \langle x_{i,t}, \beta \rangle_{\mathbb{R}^p}$,
+$x_{i,t} \in \mathbb{R}^p$ est toujours connu et $\beta \in \mathbb{R}^p$ est un paramètre à estimer. 
+
+Il est mentionné dans l'introduction que plusieurs méthodes d'analyse sont déjà développées en cas que 
+chaque $Y_{i,t}$ est de normale ou de Bernoulli. Presque toutes les modèles développées ont besoin de
+l'hypothèse que, pour chaque $i \in \{1, \cdots, K\}$, $\{Y_{i,t}\}_{t=1}^n$ sont indépendantes. 
+Il s'agit maintenant d'une modèle basée sur la famille exponentielle qui ne nécessite pas cette hypothèse.
+
+Cependant, on commence encore par le cas plus facile où $\{Y_{i,t}\}_{t=1}^n$ sont indépendantes pour chaque $i$.
+On peut alors utiliser un résultat , que je trouve dans \cite{inid_mle}, pour l'estimation par maximum de vraisemblance en cas 
+que la suite des variables aléatoires est indépendantes mais pas identiquement distribuées.
+
+\begin{theorem}[Hoadley]
+Soit $\{Y_i\}_{i=1}^{\infty}$ une suite des variables aléatoires indépendentes à valeurs dans $\mathbb{R}^{n}$,
+où chaque $Y_i$ a une densité $f_i(y; \theta_0) d \nu (y)$ pour une mesure Borel sigma finie $\nu$ 
+et un paramètre $\theta_0 \in \Theta \subseteq \mathbb{R}^p$.
+Pour chqaue nombre entier positif $K$,
+une estimateur $\hat{\theta}_K$ de $\theta_0$ est un estimateur par maximum de vraisemblance si :
+    
+\begin{equation*}
+    \hat{\theta}_K (Y_1, \cdots, Y_K) \in \argmax_{\theta \in \Theta} \prod_{i=1}^K f_i(Y_i; \theta)
+\end{equation*}
+
+On définit aussi chaque entrée de la matrice d'information de Fisher par, pour chaque $s,t \in \{1, \cdots, p\}$ :
+
+\begin{equation*}
+    (I_i(\theta))_{s,t} = \mathbb{E}_{\theta_0} \squared{\frac{\partial}{\partial \theta_s}(\ln f_i(Y_i; \theta))\frac{\partial}{\partial \theta_t}(\ln f_i(Y_i; \theta))}
+\end{equation*}
+
+On suppose que des limites des moyennes existes pour chaque entrée et on définit que :
+
+\begin{equation*}
+    (I(\theta))_{s,t} = \lim_{K \to \infty} \frac{1}{K} \sum_{i=1}^K (I_i(\theta))_{s,t}
+\end{equation*}
+
+Avec les conditions de régularité modérées, 
+$\hat{\theta}_K$ existe pour chaque $K$, $\hat{\theta}_K \to \theta_0$ en probabilité et 
+$\sqrt{K}(\hat{\theta}_K - \theta_0)$ converges en loi vers une loi normale avec moyenne zéro et 
+variance $(I(\theta_0))^{-1}$.
+\end{theorem}
+
+Retourner à notre modèle, on peut facilement calculer les matrices $I_i$ si $\{Y_{i,t}\}_{t=1}^n$ sont indépendantes.
+On obtient le résultat suivant pour la section 2 :
+
+\begin{theorem}
+Dans notre modèle, si on suppose que $\{Y_{i,t}\}_{t=1}^n$ sont indépendantes pour chaque $i$
+et que les résultats de Théorème 1 sont applicables,
+on a que :
+
+\begin{equation*}
+    \frac{\partial}{\partial \beta} \curly{\ln \squared{\prod_{t=1}^n f_{it}(Y_{it})}} 
+    \curly{\frac{\partial}{\partial \beta} \curly{\ln \squared{\prod_{t=1}^n f_{it}(Y_{it})}}}^T = 
+    \phi^2 \sum_{t=1}^n \sum_{s=1}^n h'(\eta_{it})h'(\eta_{is}) [Y_it - a'(\theta_{it})][Y_{is}-a'(\theta_{is})] \langle x_{it}, x_{is} \rangle_{\mathbb{R}^p}
+\end{equation*}
+
+Donc, il existe une suite d'estimateur $\{\hat{\beta}_K^I\}_{K=1}^{\infty}$
+tel que $\hat{\beta}_K^I \to \beta$ en probabilité vers $K \to \infty$ et
+que $\sqrt{K}(\hat{\beta}_K^I - \beta)$ converges en loi vers une loi normale avec moyen zéro et
+variance : 
+
+\begin{equation*}
+    \curly{ \lim_{K \to \infty} \frac{\phi^2}{K} \sum_{i=1}^K X_i^T \Delta_i \text{Cov}(Y_i) \Delta_i X_i }^{-1}
+\end{equation*}
+
+Où $X_i = (x_{i,1}, \cdots, x_{i,n})$ et :
+
+\begin{equation*}
+    \Delta_i =
+    \begin{bmatrix}
+        h'(\eta_{i,1}) & 0 & \cdots & 0 \\
+        0 & h'(\eta_{i,2}) & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & h'(\eta_{i,n})
+    \end{bmatrix}
+\end{equation*}
+
+L'existence de cette limite simple est une partie d'hypothèse et n'est pas une conclusion.
+\end{theorem}
+
+Pour appliquer ce résultat, on peut écrire la variance asymptotique comme :
+
+\begin{equation*}
+    \lim_{K \to \infty} \bracket{\sum_{i=1}^KX_i^T \Delta_i A_i \Delta_i X_i }^{-1} 
+    \bracket{\sum_{i=1}^KX_i^T \Delta_i S_i S_i^T \Delta_i X_i }
+    \bracket{\sum_{i=1}^KX_i^T \Delta_i A_i \Delta_i X_i }^{-1} 
+\end{equation*}
+
+Où :
+
+\begin{equation*}
+    S_i = 
+    \begin{bmatrix}
+        Y_{i,1} - a'(\theta_{i,1}) \\
+        Y_{i,2} - a'(\theta_{i,2}) \\
+        \vdots \\
+        Y_{i,n} - a'(\theta_{i,n})
+    \end{bmatrix}; \tab[0.5cm]
+    A_i = 
+    \begin{bmatrix}
+        a''(\theta_{i,1}) & 0 & \cdots & 0 \\
+        0 & a''(\theta_{i,2}) & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & a''(\theta_{i,n})
+    \end{bmatrix}
+\end{equation*}
+
+Ce format est mieux parce que l'on peut éviter l'estimation du paramètre de dispersion $\phi$.
+
+Maintenant, on peut considérer le cas où $\{Y_{i,t}\}_{t=1}^n$ ne sont pas indépendantes.
+Dans ce cas, c'est impossible de calculer la densité de plusieurs variables aléatoires.
+Pour la section 3 et 4, on poursuit donc par l'approche de quasi-vraisemblance. 
+Soit $R(\alpha)$ une matrice de corrélation de taille $n \times n$ caractérisé par un paramètre $\alpha \in \mathbb{R}^s$.
+On définit que :
+
+\begin{equation*}
+    V_i = \frac{1}{\phi} A_i^{\frac{1}{2}} R(\alpha) A_i^{\frac{1}{2}} ; \tab[0.5cm] U_i = X_i^T \Delta_i A_i V_i^{-1} S_i
+\end{equation*}
+
+On \textit{définit} aussi que notre équation d'estimation de cette section est :
+
+\begin{equation*}
+    \sum_{i=1}^K U_i(\beta) = 0
+\end{equation*}
+
+Cette équation d'estimation égale la vraisemblance dans le cas que $\{Y_{i,t}\}_{t=1}^n$ sont normales ou indépendantes
+si on choisit $R(\alpha)$ en conséquence.
+
+Dans section 4, les auteurs font plusieurs exemples de $R(\alpha)$ et montrent comment ce $\alpha$ peut 
+contrôler $R(\alpha)$. Il y existe des cas où on doit estimer les paramètre $\phi$ ou $\alpha$. 
+Heureusement, les estimateurs de ce deux paramètres avec les formulaires des résidus sont facilement obtenues.
+Soit donc $\{\hat{\alpha}_i\}_{i=1}^{\infty}$ et $\{\hat{\phi}_i\}_{i=1}^{\infty}$ les estimateurs de $\alpha$ et $\phi$,
+chaque $\hat{\alpha}_i$ et $\hat{\phi}_i$ sont $(Y_1, \cdots, Y_i)$ mesurable. 
+On réécrit l'équation d'estimation comme :
+
+\begin{equation*}
+    \sum_{i=1}^K U_i(\beta, \hat{\alpha}_i(\beta, \hat{\phi}_i(\beta))) = 0
+\end{equation*}
+
+Avec une application du théorème de Taylor, on obtient :
+
+\begin{theorem}
+    On suppose que $\hat{\alpha}_i$ et $\hat{\phi}_i$ satisfassent les conditions suivantes :
+
+    \begin{enumerate}
+        \item Étant fixé $\phi$ et $\beta$, $\sqrt{K} (\hat{\alpha}_K - \alpha) \in O_p(1)$. C'est-à-dire, la suite est bornée en probabilité.
+        \item Étant fixé $\beta$, $\sqrt{K} (\hat{\phi}_K - \phi) \in O_p(1)$. 
+        \item Il y existe une fonction $H$ à valeurs dans $\mathbb{R}$ qui dépend seulement en $Y$ et $\beta$ tel que :
+        
+        \begin{equation*}
+            \abs{\frac{\partial}{\partial \phi} \hat{\alpha}_i(Y_1, \cdots, Y_i, \beta)} \leq H(Y_1, \cdots, Y_i, \beta) \in O_p(1)
+        \end{equation*}
+    \end{enumerate}
+
+    On obtient alors que, avec les conditions de régularité modérées,
+    une suite d'estimateurs $\{\hat{\beta}_K^{G}\}_{K=1}^{\infty}$ existe tel que
+    $\sqrt{K} (\hat{\beta}_K^G - \beta)$ converges en loi vers une loi normale avec moyen zéro et variance :
+
+    \begin{equation*}
+        \lim_{K \to \infty} K \curly{\sum_{i=1}^K D_i^T V_i^{-1} D_i}^{-1} \curly{\sum_{i=1}^K D_i^T V_i^{-1} \text{Cov}(Y_i) V_i^{-1}D_i} \curly{\sum_{i=1}^K D_i^T V_i^{-1} D_i}^{-1}
+    \end{equation*}
+\end{theorem}
+
+Dans la section 5, les auteurs font deux simulations afin de répondre aux deux questions :
+
+\begin{enumerate}
+    \item Est-ce que $\beta^G$ soit asymptotiquement plus efficace que $\beta^I$ ?
+    \item Si on a plus d'information sur la distribution de $Y$, est-ce que $\beta^G$ 
+    ou $\beta^I$ soit plus efficace que l'estimation de maximum de vraisemblance ?
+\end{enumerate}
+
+Pour répondre à la première question, les auteurs génèrent des données utilisant des matrices de corrélation spécifique.
+En général, s'il n'y a pas beaucoup de dépendance (i.e. un-dépendance ou échangeable), c'est $\beta^I$ qui a asymptotiquement
+moins de variance. Afin de répondre à la deuxième question, 
+les auteurs génèrent des données utilisant une chaîne de Markov avec la loi binaire de marginale spécifique. 
+$\beta^G$ est en général plus efficace que les autres. 
+
+Finalement, les auteurs font une sommaire sur ce qu'ils ont fait dans la section 6 sans donnant des nouvelles questions.
+Ils discutent aussi brièvement le cas si les données sont manquantes.
+Si on utilise une structure correcte pour la matrice $R$ pour la construction de $\beta^G$,
+il n'est pas nécessaire de supposer que les données manquantes sont aléatoires avec un modèle.
+
+\bibliographystyle{alpha}
+\bibliography{reference.bib} % see references.bib for bibliography management
+
+\end{document}
