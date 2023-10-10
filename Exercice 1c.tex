@@ -25,7 +25,14 @@ On a, pour chaque $\omega \in \Omega$ :
 
 \begin{equation*}
     \mathbb{E}[Y^2 \mid X, Z](\omega) = \int_{\mathbb{R}} y^2 d \mu_{Y \mid X = X(\omega), Z = Z(\omega)} (y) = 
-    \exp{2(\beta_0 + \beta_1X(\omega) + \beta_2Z(\omega))} 
+    \exp{2(\beta_0 + \beta_1X(\omega) + \beta_2Z(\omega))}  + \exp{\beta_0 + \beta_1X(\omega) + \beta_2Z(\omega)}
+\end{equation*}
+
+Alors :
+
+\begin{equation*}
+    \mathbb{E}[Y^2 \mid X] = \mathbb{E}[\mathbb{E}[Y^2 \mid X, Z] \mid X] = 
+    \exp{2(\beta_0+\beta_1X)}\mathbb{E}[e^{\beta_2 Z} \mid X] + \exp{\beta_0 + \beta_1 X} \mathbb{E}[e^{\beta_2Z} \mid X]
 \end{equation*}
 \end{CJK*}
 \end{document}
