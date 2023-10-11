@@ -32,7 +32,20 @@ Alors :
 
 \begin{equation*}
     \mathbb{E}[Y^2 \mid X] = \mathbb{E}[\mathbb{E}[Y^2 \mid X, Z] \mid X] = 
-    \exp{2(\beta_0+\beta_1X)}\mathbb{E}[e^{\beta_2 Z} \mid X] + \exp{\beta_0 + \beta_1 X} \mathbb{E}[e^{\beta_2Z} \mid X]
+    \exp{2(\beta_0+\beta_1X)}\mathbb{E}[e^{2 \beta_2 Z} \mid X] + \exp{\beta_0 + \beta_1 X} \mathbb{E}[e^{\beta_2Z} \mid X]
 \end{equation*}
+
+Donc, en utilisant la formule de la variance conditionnelle :
+
+\begin{equation*}
+    \begin{split}
+    &\tab[0.4cm] \text{Var}(Y \mid X) = \mathbb{E}[Y^2 \mid X] - \mathbb{E}[Y \mid X]^2 \\ & = 
+    \exp{2(\beta_0+\beta_1X)}\mathbb{E}[e^{2 \beta_2 Z} \mid X] + \exp{\beta_0 + \beta_1 X} \mathbb{E}[e^{\beta_2Z} \mid X] 
+    - \bracket{\exp{\beta_0+\beta_1 X} \mathbb{E}[e^{\beta_2 Z} \mid X]}^2 \\ & = 
+    \exp{2(\beta_0+\beta_1X)} \text{Var}(e^{\beta_2 Z} \mid X) + \exp{\beta_0 + \beta_1 X} \mathbb{E}[e^{\beta_2Z} \mid X]
+    \end{split}
+\end{equation*}
+
+Le calcul est complet. ////
 \end{CJK*}
 \end{document}
