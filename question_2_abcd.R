@@ -13,7 +13,7 @@ print(dispersiontest(modele_poisson))
 #Le test donne que le paramètre de dispersion est 3.143975 avec p-valeur 4.07e-08
 #Par conséquent, la sur-dispersion est significative
 
-#Question b: pas complet
+#Question b:  modèle binomiale négatif
 
 #Question c: 2^4-1=15 modèles possibles, il faut choisir une critière pour sélectionner le meilleur modèle
 #Disons, on choisit le critère AIC pour sélectionner le meilleur modèle
