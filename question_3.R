@@ -10,7 +10,8 @@ donnee <- donnee[ , !(names(donnee) %in% drops)]
 donnee$smoking <- as.factor(donnee$smoking)
 donnee$age <- as.numeric(donnee$age)
 donnee$sex <- as.factor(donnee$sex)
-donnee$SES <- as.factor(donnee$SES)
+#donnee$SES <- as.factor(donnee$SES)
+donnee$SES <- as.numeric(donnee$SES)
 donnee$weight <- as.numeric(donnee$weight)
 
 donnee_separe <- split(donnee, donnee$time_discrete)
@@ -45,33 +46,39 @@ modeles_lineaires_age_SES_sex_smoking,  modele_i)
     residues_age_SES_sex_smoking[i] <- mean(residuals(modele_i))
 }
 
-#print(cor(residues_aucune, residues_age_sex)) # -0.5644551
-#print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
-#print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
+print("Les corrélations résiduelles sont :")
+print(cor(residues_aucune, residues_age_sex)) # -0.5644551
+print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
+print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
+print("#############################################################################################")
 
 # Question 3:
 # Comme discuté, on utilise SES comme une variable explicative pour la variable de réponse weight
 
 # 3.1) l'indépendence entre toutes les observations
 modele_lineaire <- lm(weight ~ SES, data = donnee)
-print(summary(modele_lineaire))
+print(summary(modele_lineaire)) #std error for ses = 0.1328
+print("#############################################################################################")
 
 #3.2) Modèle linéaire généralisé (normale) où on assume une matrice de corrélation interchangeable
 # pas complet
 library(nlme)
-#glm_normal <- gls(weight ~ SES, data = donnee, correlation = corCompSymm(form = ~ 1 | SES))
-#print(summary(glm_normal))
+glm_normal <- gls(weight ~ SES, data = donnee, correlation = corCompSymm(form = ~ 1 | SES))
+print(summary(glm_normal)) #std error for ses = 0.1868304
+print("#############################################################################################")
 
 #3.3) GEE + interchangeable
 require(geepack)
 GEE <- summary ( geese ( weight ~ SES , id = ID, data = donnee , corstr = 'exchangeable' ) )
-print(GEE)
+print(GEE) #std error for ses = 0.1646921
+print("#############################################################################################")
 
 #3.4) modèle mixte une ordonnée à l'origine et une pente aléatoire pour chaque individu et des erreurs indépendents
 library(lme4)
 
-#modele_mixte <- lmer(weight ~ 1 + (1 | SES), data = donnee)
-#print(summary(modele_mixte))
+modele_mixte <- lmer(weight ~ (1 + SES | ID), data = donnee)
+print(summary(modele_mixte)) #ne converge pas
 
-modele_mixte <- lmer(weight ~ SES + (1 + time | ID), data = donnee)
-print(summary(modele_mixte))
+# On conclut donc que le modèle linéaire pour 3.1) est le meilleur modèle pour les données
+print("#############################################################################################")
+print(confint(modele_lineaire))
