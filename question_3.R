@@ -60,6 +60,7 @@ modele_lineaire <- lm(weight ~ SES, data = donnee)
 print(summary(modele_lineaire)) #std error for ses = 0.1328
 print("#############################################################################################")
 
+if (FALSE){
 #3.2) Modèle linéaire généralisé (normale) où on assume une matrice de corrélation interchangeable
 # pas complet
 library(nlme)
@@ -72,11 +73,13 @@ require(geepack)
 GEE <- summary ( geese ( weight ~ SES , id = ID, data = donnee , corstr = 'exchangeable' ) )
 print(GEE) #std error for ses = 0.1646921
 print("#############################################################################################")
+}
 
 #3.4) modèle mixte une ordonnée à l'origine et une pente aléatoire pour chaque individu et des erreurs indépendents
 library(lme4)
 
 modele_mixte <- lmer(weight ~ (1 + SES | ID), data = donnee)
+# https://stats.stackexchange.com/questions/110004/how-scared-should-we-be-about-convergence-warnings-in-lme4
 print(summary(modele_mixte)) #ne converge pas
 
 # On conclut donc que le modèle linéaire pour 3.1) est le meilleur modèle pour les données
