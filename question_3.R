@@ -45,9 +45,9 @@ modeles_lineaires_age_SES_sex_smoking,  modele_i)
     residues_age_SES_sex_smoking[i] <- mean(residuals(modele_i))
 }
 
-print(cor(residues_aucune, residues_age_sex)) # -0.5644551
-print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
-print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
+#print(cor(residues_aucune, residues_age_sex)) # -0.5644551
+#print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
+#print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
 
 # Question 3:
 # Comme discuté, on utilise SES comme une variable explicative pour la variable de réponse weight
@@ -59,16 +59,19 @@ print(summary(modele_lineaire))
 #3.2) Modèle linéaire généralisé (normale) où on assume une matrice de corrélation interchangeable
 # pas complet
 library(nlme)
-#glm_normal <- glm(weight ~ SES, data = donnee, correlation = corSymm(form = ~ 1 | SES))
+#glm_normal <- gls(weight ~ SES, data = donnee, correlation = corCompSymm(form = ~ 1 | SES))
 #print(summary(glm_normal))
 
 #3.3) GEE + interchangeable
 require(geepack)
 GEE <- summary ( geese ( weight ~ SES , id = ID, data = donnee , corstr = 'exchangeable' ) )
-print(summary(GEE))
+print(GEE)
 
 #3.4) modèle mixte une ordonnée à l'origine et une pente aléatoire pour chaque individu et des erreurs indépendents
 library(lme4)
 
-modele_mixte <- lmer(weight ~ 1 + (1 | SES), data = donnee)
+#modele_mixte <- lmer(weight ~ 1 + (1 | SES), data = donnee)
+#print(summary(modele_mixte))
+
+modele_mixte <- lmer(weight ~ SES + (1 + time | ID), data = donnee)
 print(summary(modele_mixte))
