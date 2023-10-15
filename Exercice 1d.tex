@@ -3,10 +3,10 @@
 \begin{document}
 \section{Exercice 1d}
 \begin{CJK*}{UTF8}{gbsn}
-Fix $\alpha > 0$. For a $\theta \in (0, \alpha)$,
-let $\{X_i\}_{i=1}^n$ be a sequence of real independent identically distributed random variable 
-defined on some probability space $(\Omega, F, P)$
-with common probability density function with respect to the Lebesgue measure:
+Soit $\alpha > 0$. Pour un $\theta \in (0, \alpha)$,
+considérons $\{X_i\}_{i=1}^n$ comme une séquence de variables aléatoires réelles indépendantes et identiquement distribuées
+définies sur un espace probabilisé $(\Omega, F, P)$
+avec une fonction de densité de probabilité commune par rapport à la mesure de Lebesgue :
 
 \begin{equation*}
     f_{\theta}(x) = 
@@ -17,61 +17,61 @@ with common probability density function with respect to the Lebesgue measure:
     \end{cases}
 \end{equation*}
 
-Prove that the maximum likelihood estimation of $\theta$ must be one of the given observation
-but not necessarily any particular observation. 
-In case $\alpha = 5$ and $n=3$, compute the maximum likelihood estimate of $\theta$ when the 
-observations are $(1,2,4)$ or $(2,3,4)$.  
+Prouvez que l'estimation du maximum de vraisemblance de $\theta$ doit être l'une des observations données,
+mais pas nécessairement une observation particulière. 
+Dans le cas où $\alpha = 5$ and $n=3$,  calculez l'estimation du maximum de vraisemblance de  $\theta$lorsque les
+observations sont $(1,2,4)$ or $(2,3,4)$.  
 
 \smallskip
 \paragraph{Solution}
-Let $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
-Write $g_{\theta}(x)$ for the joint probability density function of $X_i$'s 
-and $x_{(i)}$ for the $i$th smallest coordiante in $x$.
-If $x_i < 0$ or $x_i > \alpha$ for some $i$, then $g_{\theta}(x)=0$ for any $\theta$ so that 
-any estimate would be a maximum likelihood estimate.
-We exclude this pathology and prove that:
+Soit $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
+Écrivons $g_{\theta}(x)$ pour la fonction de densité de probabilité conjointe des $X_i$'s 
+et $x_{(i)}$ pour la $i$th  plus petite coordonnée de $x$.
+Si $x_i < 0$ or $x_i > \alpha$ Pour un certain $i$, alors $g_{\theta}(x)=0$ pour tout $\theta$de sorte que toute estimation serait une estimation du maximum de vraisemblance.
+Nous excluons cette pathologie et prouvons que :
 
 \begin{theorem}
-If $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, then $\theta_0 = x_{(i)}$ for some $i$.
+Si $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, alors $\theta_0 = x_{(i)}$ pour un certain $i$.
 \end{theorem}
 
 \begin{proof}
-It never happens that $\theta_0 < x_{(1)}$
-because $g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (\theta_0,x_{(1)})$.
-Similarly, it never happens that $\theta_0 > x_{(n)}$ because
-$g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (x_{(n)}, \theta_0)$.
-We assume from now on that $\theta_0 \in [x_{(i)}, x_{(i+1)}]$ for some $i \in \{1,\cdots, n-1\}$.
-Suppose, for the sake of contradiction, that $x_{(i)} < \theta_0 < x_{(i+1)}$. We have:
+Il n'arrive jamais que $\theta_0 < x_{(1)}$
+car $g_{\theta_1}(x) > g_{\theta_0}(x)$ dès que $\theta_1 \appartient à l'intervalle (\theta_0,x_{(1)})$.
+De même, il n'arrive jamais que $\theta_0 > x_{(n)}$ car
+$g_{\theta_1}(x) > g_{\theta_0}(x)$  dès que $\theta_1 \ appartient à l'intervalle (x_{(n)}, \theta_0)$.
+À partir de maintenant, nous supposons que $\theta_0 \appartient à l'intervalle [x_{(i)}, x_{(i+1)}]$ Pour un certain $i \ dans l'ensemble \{1,\cdots, n-1\}$.
+Supposons, par contradiction, que $x_{(i)} < \theta_0 < x_{(i+1)}$. Nous avons
 
 \begin{equation*}
     g_{\theta_{\theta_0}}(x) = \bracket{\frac{2}{\alpha}}^n  \frac{x_{(1)}}{\theta_0} \cdots \frac{x_{(i)}}{\theta_0}
     \frac{\alpha-x_{(i+1)}}{\alpha - \theta_0} \cdots \frac{\alpha-x_{(n)}}{\theta_0}
 \end{equation*}
 
-The numerator does not depend on $\theta_0$.
-This motivates us to define function $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ by:
+Le numérateur ne dépend pas de $\theta_0$.
+Cela nous motive à définir la fonction $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ par:
 
 \begin{equation*}
     h(\theta) = \frac{1}{\theta^i} \frac{1}{(\alpha-\theta)^{n-i}}
 \end{equation*}
 
-Then the second derivative is:
+Alors, la deuxième dérivée est :
 
 \begin{equation*}
     h''(\theta) = i(i+1)\theta^{-i-2} (\alpha-\theta)^{i-n} + (n-i)(n-i+1)\theta^{-i} (\alpha-\theta)^{i-n-2} > 0
 \end{equation*}
 
-Therefore, $h$ is strictly convex and the maximum can only be at the boundary points.
+Donc, $h$ est strictement convexe et le maximum ne peut se situer qu'aux points limites.
 \end{proof}
 
-We now demonstrate that the choice of $i$ is not unique in the above theorem. 
-The simplest case will be $x_i=x_j$ for any $i$ and any $j$. 
-For a nontrivial example, let $\alpha = 5$, $n = 3$.
-If $x=(2,3,4)$, then the maximum likelihood estimate is one of $\{2,3,4\}$.
-An estimate of $3$ or $4$ yields maximum likelihood $\frac{8}{375}$ while an estimate of $2$ yields likelihood $\frac{16}{1125}$.
-Therefore, the maximum likelihood estimate can be $3$ or $4$ and is not unique.
+Nous démontrons maintenant que le choix de $i$ n'est pas unique dans le théorème ci-dessus.
+Le cas le plus simple serait $x_i=x_j$ pour n'importe quel $i$ et n'importe quel $j$. 
+Pour un exemple non trivial, posons $\alpha = 5$, $n = 3$.
+Si $x=(2,3,4)$, alors l'estimation du maximum de vraisemblance est l'une des valeurs $\{2,3,4\}$.
+Une estimation de $3$ or $4$ donne une vraisemblance maximale de $\frac{8}{375}$ tandis qu'une estimation de $2$ donneune vraisemblance de $\frac{16}{1125}$.
+Par conséquent, l'estimation du maximum de vraisemblance peut être $3$ or $4$ et n'est pas unique.
 
-Finally, the additional example $x=(1,2,4)$, estimate $\theta=1,2,4$ gives likelihood $\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
-repsectively. We conclude that $\theta=1$ is the maximum likelihood estimate in this case.////
+Enfin, pour l'exemple supplémentaire $x=(1,2,4)$, estimer $\theta=1,2,4$  donne une vraisemblance de
+$\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
+respectivement. Nous concluons que $\theta=1$ est l'estimation du maximum de vraisemblance dans ce cas.////
 \end{CJK*}
 \end{document}
