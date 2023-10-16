@@ -1,11 +1,13 @@
-\documentclass{article}  
-\usepackage{listings}   
-\usepackage{graphicx}   
+\documentclass[../main.tex]{subfiles}
 
 \begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+\section*{Exercice 2a}
+
 Dans cette section, nous analyserons les données à l'aide du logiciel R pour répondre à la question a.
 
-\subsection{Importation de données}
+\subsection*{Importation de données}
 
 Tout d'abord, nous importons l'ensemble de données et examinons les informations de base sur les données.
 
@@ -17,9 +19,7 @@ attach (hcrabs)
 
 \end{lstlisting}
 
-\section{Exercice 2a}
-
-\subsection{Modèle de régression de Poisson}
+\subsection*{Modèle de régression de Poisson}
 
 Ensuite,nous avons utilisé un modèle de régression de Poisson pour analyser les données et prédire le nombre de satellites chez les araignées de mer mâles.
 
@@ -29,7 +29,7 @@ glm ( num.satellites ~ width + spine + color, family = poisson ( link = log ) ,
 data = hcrabs ) 
 \end{lstlisting}
 
-\subsection{Le test de surdispersion}
+\subsection*{Le test de surdispersion}
 
 On fait puis le test de surdispersion et évaluer le paramèter de sur-dispersion.
 
@@ -43,7 +43,7 @@ Par conséquent, la sur-dispersion est significative.
 
 Cela signifie que les variations du nombre de satellites mâles ne sont pas bien prises en compte dans le modèle de Poisson standard, et que des modèles de surdiscrétisation plus complexes peuvent être envisagés pour mieux s'adapter à ces données.
 
-\section{Exercice 2b}
+\section*{Exercice 2b}
 
 Lorsque nous effectuons une régression de Poisson, nous supposons que la variance est égale à la moyenne, une propriété inhérente à la distribution de Poisson. Cependant, les données réelles peuvent ne pas toujours respecter cette supposition. Lorsque la variance observée est supérieure à la moyenne prévue, nous parlons de \textbf{surdispersion}.
 
@@ -61,12 +61,12 @@ L'utilisation d'une régression de Poisson en présence de surdispersion peut en
 
 Face à la surdispersion, on se tourne généralement vers d'autres modèles pour les données de comptage. La \textbf{régression binomiale négative} est un choix courant car elle introduit un paramètre supplémentaire pour capturer la surdispersion. Plus précisément, la distribution binomiale négative peut être considérée comme la somme de plusieurs distributions géométriques indépendantes, où chaque distribution géométrique représente le nombre d'essais nécessaires avant la prochaine occurrence d'un événement.
 
-\section{Exercice 2c}
- Il y a 2*4-1=15 modèles possibles, il faut choisir une critière pour sélectionner le meilleur modèle
+\section*{Exercice 2c}
+ Il y a $2 \times 4-1=15$ modèles possibles, il faut choisir une critière pour sélectionner le meilleur modèle
 Disons, on choisit le critère AIC pour sélectionner le meilleur modèle
-Rappel : si on a k modèles, qui ont les valeurs d'AIC  AIC-1, AIC—2, ..., AIC-k resptivement
-Les valeurs exp(-0.5*(AIC-i - AIC-min)) sont les probabilités que le modèle i 
-minimise la perte d'informations
+On rappelle que si on a $k$ modèles qui ont les valeurs d'AIC $\text{AIC}_1$, $\cdots$, $\text{AIC}_k$ respectivement
+Les valeurs $\exp{-\frac{1}{2}(\text{AIC}_i - \text{AIC}_{min})}$ sont les probabilités que le modèle $i$
+minimisant la perte d'informations.
 
 \begin {lstlisting}[language=R]
 modele_color <- glm ( num.satellites ~ color, family = poisson ( link = log ) ,data = hcrabs ) 
@@ -111,7 +111,7 @@ print(which.max(proba))
 \end{lstlisting}
  On trouve que AIC = 7, le modèle color-weight est le meilleur modèle
 
-\section{Exercice 2d}
+\section*{Exercice 2d}
 
  Analyse des résidus pour le modèle color-weight choisi précédemment dans la question c).
 
@@ -121,4 +121,6 @@ print(which.max(proba))
   library(surveillance)
 plot(anscombe.residuals(modele_color_weight, phi =1))
   \end{lstlisting}
+
+\end{CJK*}
 \end{document}

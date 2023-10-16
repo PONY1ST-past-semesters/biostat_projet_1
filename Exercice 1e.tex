@@ -1,16 +1,8 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath, amssymb, bm}
-
-\title{ex1e}
-\author{LI QINGYUE}
-\date{October 2023}
+\documentclass[../main.tex]{subfiles}
 
 \begin{document}
-
-\section*{0.5 Exercice 1e}
+\begin{CJK*}{UTF8}{gbsn}
+\section*{Exercice 1e}
 
 1. \textbf{Définition du modèle}:
 \[ Y_{ij} = a_i + b_i X_{ij} + \beta X_{ij} + \epsilon_{ij} \]
@@ -25,14 +17,18 @@ où:
 \end{itemize}
 
 2. \textbf{Hypothèses sur les composants aléatoires}:
-\begin{align*}
-    a_i &\sim N(4, \tau^2) \\
-    b_i &\sim N(0, \psi^2) \\
-    \text{Cov}(\epsilon_{ij}) &= \sigma^2 \bm{V}
-\end{align*}
-où \( \bm{V} \) est une matrice qui définit une corrélation de type AR(1) entre les erreurs pour un même individu \( i \).
 
-\textbf{Solution}:
+\begin{equation*}
+    \begin{split}
+        & a_i \sim N(4, \tau^2) 
+        \\ & b_i \sim N(0, \psi^2)
+        \\ & \text{Cov}(\epsilon_{ij}) = \sigma^2 V
+    \end{split}
+\end{equation*}
+
+où \( V \) est une matrice qui définit une corrélation de type AR(1) entre les erreurs pour un même individu \( i \).
+
+\paragraph{Solution} 
 Nous revoyons d'abord le modèle donné dans la question:
 
 \[
@@ -79,32 +75,33 @@ Ceci est cohérent avec la façon dont nous séparons les modèles linéaires en
 
 ii) Pour la variance de \( Y_{ij} \), nous considérons la somme des variances des trois effets aléatoires (intercept, pente, et l'erreur) :
 
-\begin{equation}
+\begin{equation*}
 \text{Var}(Y_{ij}) = \text{Var}(a_i) + \text{Var}(b_i X_{ij}) + \text{Var}(\epsilon_{ij})
-\end{equation}
+\end{equation*}
 
 En utilisant les informations fournies :
 
-\begin{equation}
+\begin{equation*}
 \text{Var}(Y_{ij}) = \tau^2 + \psi^2 X_{ij}^2 + \sigma^2
-\end{equation}
+\end{equation*}
 
 Cette variance sera l'élément diagonal de la matrice de covariance.
 La covariance entre deux observations de \( Y \) à deux moments différents \( j \) et \( k \) est donnée par :
 
-\begin{equation}
+\begin{equation*}
 \text{Cov}(Y_{ij}, Y_{ik}) = \text{Cov}(a_i + b_i X_{ij} + \epsilon_{ij}, a_i + b_i X_{ik} + \epsilon_{ik})
-\end{equation}
+\end{equation*}
 
 En tenant compte des effets aléatoires \( a_i \) et \( b_i \) qui sont indépendants, et de la structure de covariance entre les erreurs \( \epsilon_{ij} \) qui est définie par la matrice \( V \) :
 
-\begin{equation}
+\begin{equation*}
 \text{Cov}(Y_{ij}, Y_{ik}) = \tau^2 + \psi^2 X_{ij} X_{ik} + \sigma^2 \rho^{|j-k|}
-\end{equation}
+\end{equation*}
 
 où \( \rho^{|j-k|} \) est défini par la structure AR(1) de la matrice \( V \).
 
-Nous pouvons maintenant construire la matrice de covariance 5x5 \( \text{Cov}(Y_i) \) pour chaque individu \( i \) en utilisant les formules de variance et de covariance ci-dessus.
+Nous pouvons maintenant construire la matrice de covariance $5 \times 5$ 
+\( \text{Cov}(Y_i) \) pour chaque individu \( i \) en utilisant les formules de variance et de covariance ci-dessus.
 
-
+\end{CJK*}
 \end{document}

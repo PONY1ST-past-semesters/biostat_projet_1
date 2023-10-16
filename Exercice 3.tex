@@ -1,26 +1,55 @@
-\documentclass[12pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{listings}  
+\documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\section{Exercice 3a}
+\begin{CJK*}{UTF8}{gbsn}
+
+\section*{Exercice 3a}
 
 Approfondissons davantage la structure de corrélation du poids dans les données longitudinales.
 
-Les données longitudinales font référence aux données collectées plusieurs fois sur le même échantillon ou entité. Par exemple, les données collectées sur une personne à différents moments peuvent être considérées comme des données longitudinales. Compte tenu de cette caractéristique des données longitudinales, nous pouvons nous attendre à la structure de corrélation suivante dans les données:
+Les données longitudinales font référence aux données collectées plusieurs fois sur le même échantillon ou entité. 
+Par exemple, les données collectées sur une personne à différents 
+moments peuvent être considérées comme des données longitudinales. 
+Compte tenu de cette caractéristique des données longitudinales, 
+nous pouvons nous attendre à la structure de corrélation suivante dans les données :
 
-\textbf{Autocorrélation :} Il pourrait y avoir une autocorrélation entre les mesures de poids à des moments consécutifs. En raison des caractéristiques physiologiques du corps humain, le poids ne change pas facilement en peu de temps. Par exemple, si le poids d'une personne est de 70 kg lors de la première mesure, lors de la deuxième mesure, son poids pourrait toujours être proche de 70 kg et il est peu probable qu'il augmente ou diminue soudainement de 10 kg.
+\textbf{Autocorrélation :} 
+Il pourrait y avoir une autocorrélation entre les mesures de poids à des moments consécutifs. 
+En raison des caractéristiques physiologiques du corps humain, 
+le poids ne change pas facilement en peu de temps. 
+Par exemple, si le poids d'une personne est de $70$ kg lors de la première mesure, 
+lors de la deuxième mesure, son poids pourrait toujours être proche de $70$ kg et
+ il est peu probable qu'il augmente ou diminue soudainement de $10$ kg.
 
-\textbf{Continuité des habitudes de vie :} Les habitudes de vie, comme l'alimentation, l'exercice et les routines quotidiennes, ont un impact direct sur le poids. À court terme, ces habitudes sont susceptibles de rester relativement stables. Par conséquent, si les habitudes alimentaires et d'exercice à un moment donné entraînent une prise de poids, nous pourrions également observer une prise de poids dans les mesures ultérieures.
+\textbf{Continuité des habitudes de vie :} 
+Les habitudes de vie, comme l'alimentation, 
+l'exercice et les routines quotidiennes, ont un impact direct sur le poids. 
+À court terme, ces habitudes sont susceptibles de rester relativement stables. 
+Par conséquent, si les habitudes alimentaires et d'exercice à un moment donné entraînent une prise de poids, 
+nous pourrions également observer une prise de poids dans les mesures ultérieures.
 
-\textbf{Facteurs saisonniers :} À différents moments de l'année, le poids peut être affecté par les jours fériés, les changements saisonniers et les changements d'habitudes alimentaires associés. Par exemple, en hiver, le poids pourrait augmenter en raison de moins d'activités de plein air et de repas festifs plus copieux.
+\textbf{Facteurs saisonniers :} 
+À différents moments de l'année, le poids peut être affecté par les jours fériés, 
+les changements saisonniers et les changements d'habitudes alimentaires associés. 
+Par exemple, en hiver, le poids pourrait augmenter en raison 
+de moins d'activités de plein air et de repas festifs plus copieux.
 
-\textbf{Influence d'autres variables :} Outre l'effet temporel, d'autres variables telles que l'âge, le sexe, la situation socio-économique (SES) et les habitudes de tabagisme peuvent également être liées aux variations de poids. Par exemple, le poids des adolescents pourrait augmenter avec l'âge. Le tabagisme peut affecter l'appétit et le métabolisme, influençant ainsi le poids.
+\textbf{Influence d'autres variables :} 
+Outre l'effet temporel, d'autres variables telles que l'âge, le sexe, 
+la situation socio-économique (SES) et les habitudes de 
+tabagisme peuvent également être liées aux variations de poids. 
+Par exemple, le poids des adolescents pourrait augmenter avec l'âge. 
+Le tabagisme peut affecter l'appétit et le métabolisme, influençant ainsi le poids.
 
-En résumé, nous pouvons nous attendre à ce qu'il y ait une forte corrélation positive entre les mesures de poids à des moments consécutifs pour un individu particulier. De plus, cette corrélation pourrait diminuer progressivement à mesure que l'intervalle de temps entre les deux points augmente. Par exemple, par rapport à la mesure du poids de la veille, la mesure du poids d'un mois plus tôt pourrait avoir une corrélation plus faible avec la mesure du poids actuelle.
+En résumé, nous pouvons nous attendre à ce qu'il y ait 
+une forte corrélation positive entre les mesures de poids 
+à des moments consécutifs pour un individu particulier. 
+De plus, cette corrélation pourrait diminuer progressivement 
+à mesure que l'intervalle de temps entre les deux points augmente. 
+Par exemple, par rapport à la mesure du poids de la veille, 
+la mesure du poids d'un mois plus tôt pourrait avoir une corrélation plus faible avec la mesure du poids actuelle.
 
-\section{Exercice 3b}
+\section*{Exercice 3b}
 
 \textbf{Objectifs de la question}:
 \begin{enumerate}
@@ -64,7 +93,7 @@ for (i in 1:4){
 
 3. \textbf{Modèle 3} (avec \texttt{age}, \texttt{sex}, \texttt{SES} et \texttt{smoking} comme variables explicatives):
 
-    \begin {lstlisting}[language=R]
+\begin{lstlisting}
    modeles_lineaires_age_SES_sex_smoking <- list()
 residues_age_SES_sex_smoking <- rep(1,4)
 for (i in 1:4){
@@ -74,20 +103,16 @@ donnee_separe[[i]]$SES + donnee_separe[[i]]$smoking)
 modeles_lineaires_age_SES_sex_smoking,  modele_i)
     residues_age_SES_sex_smoking[i] <- mean(residuals(modele_i))
 }
-
-   \end{lstlisting}
+\end{lstlisting}
 
 4. \textbf{Comparaison des corrélations résiduelles des modèles} :
 
-   \begin {lstlisting}[language=R]
-   
-print("Les corrélations résiduelles sont :")
-
-print(cor(residues_aucune, residues_age_sex)) # -0.5644551
-print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
-print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
-
-   \end{lstlisting}
+\begin{lstlisting}
+    print("Les correlations residuelles sont :")
+    print(cor(residues_aucune, residues_age_sex)) # -0.5644551
+    print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
+    print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
+\end{lstlisting}
 
 \begin{itemize}
     \item \(-0.5644551\): Cette valeur représente la corrélation entre les résidus du premier modèle (sans variables explicatives, seulement l'ordonnée à l'origine) et ceux du deuxième modèle (avec \textit{age} et \textit{sex} comme variables explicatives). Cette corrélation négative signifie que lorsque les résidus du premier modèle augmentent, ceux du deuxième modèle ont tendance à diminuer, et vice versa.
@@ -99,9 +124,9 @@ print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
 
 En conclusion, ces valeurs de corrélation résiduelle reflètent les différences de performance prédictive et de structure des résidus entre les trois modèles. En comparant ces valeurs, on peut obtenir des insights sur l'efficacité des modèles et le choix des variables. Par exemple, la forte corrélation négative entre les deuxième et troisième modèles pourrait signifier qu'il y a un chevauchement dans la sélection des variables entre eux, tandis que le premier modèle pourrait avoir une performance prédictive différente en raison de l'absence de variables explicatives.
    
-\section{Exercice 3c}
+\section*{Exercice 3c}
 
-On utilise SES comme une variable explicative pour la variable de réponse weight
+On utilise SES comme une variable explicative pour la variable de réponse weight.
 
 \textbf{3.1) Modèle linéaire en assumant l'indépendance entre toutes les observations:}
 
@@ -110,7 +135,7 @@ modele_lineaire <- lm(weight ~ SES, data = donnee)
 print(summary(modele_lineaire))  #std error for ses = 0.1328
 \end{lstlisting}
 
-On trouve que std error for SES est 0.1328
+On trouve que std error for SES est $0.1328$.
 
 \textbf{3.2) Modèle linéaire généralisé (normale) où on assume une matrice de corrélation interchangeable:}
 
@@ -120,7 +145,7 @@ glm_normal <- gls(weight ~ SES, data = donnee, correlation = corCompSymm(form = 
 print(summary(glm_normal)) #std error for ses = 0.1868304
 \end{lstlisting}
 
-On trouve que std error for SES est 0.1868304
+On trouve que std error for SES est $0.1868304$.
 
 \textbf{3.3) GEE avec une matrice de corrélation interchangeable:}
 
@@ -130,7 +155,7 @@ GEE <- summary(geese(weight ~ SES, id = ID, data = donnee, corstr = 'exchangeabl
 print(GEE) #std error for ses est 0.1646921
 \end{lstlisting}
 
-On trouve que std error for SES est 0.1646921
+On trouve que std error for SES est $0.1646921$.
 
 \textbf{3.4) Modèle mixte avec une ordonnée à l'origine et une pente aléatoire pour chaque individu:}
 
@@ -141,13 +166,20 @@ print(summary(modele_mixte)) #ne converge pas
 print(confint(modele_lineaire))
 \end{lstlisting}
 
-Lors de l'estimation des paramètres du modèle, le processus d'estimation n'a pas atteint une solution stable, de sorte que le modèle n'a pas convergé.
+Lors de l'estimation des paramètres du modèle, 
+le processus d'estimation n'a pas atteint une solution stable, 
+de sorte que le modèle n'a pas convergé.
 
 \textbf{Conclusion:}
 
-On sait que des erreurs standard plus petites impliquent des estimations plus précises des paramètres du modèle, tandis que des erreurs standard plus grandes indiquent une plus grande incertitude. Ainsi, parmi les quatre modèles mentionnés ci-dessus, le modèle 3.1 présente l'erreur standard la plus faible (0.1328).
-On conclut que le modèle linéaire pour 3.1) est le meilleur modèle pour les données
+On sait que des erreurs standard plus petites impliquent 
+des estimations plus précises des paramètres du modèle, 
+tandis que des erreurs standard plus grandes indiquent une plus grande incertitude. 
+Ainsi, parmi les quatre modèles mentionnés ci-dessus, 
+le modèle 3.1 présente l'erreur standard la plus faible ($0.1328$).
+On conclut que le modèle linéaire pour 3.1) est le meilleur modèle pour les données.
 
+\end{CJK*}
 \end{document}
 
 
