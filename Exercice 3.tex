@@ -1,77 +1,153 @@
-\documentclass[../main.tex]{subfiles}
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}  
 
 \begin{document}
-\section{Exercice 3}
-\begin{CJK*}{UTF8}{gbsn}
-Fix $\alpha > 0$. For a $\theta \in (0, \alpha)$,
-let $\{X_i\}_{i=1}^n$ be a sequence of real independent identically distributed random variable 
-defined on some probability space $(\Omega, F, P)$
-with common probability density function with respect to the Lebesgue measure:
+\section{Exercice 3a}
 
-\begin{equation*}
-    f_{\theta}(x) = 
-    \begin{cases}
-        \frac{2x}{\alpha \theta} \tab[1.3cm] x \in [0, \theta] \\
-        \frac{2(\alpha-x)}{\alpha(\alpha - \theta)} \tab[0.6cm] x \in [\theta, \alpha] \\
-        0 \tab[1.5cm] \text{otherwise}
-    \end{cases}
-\end{equation*}
+Approfondissons davantage la structure de corrélation du poids dans les données longitudinales.
 
-Prove that the maximum likelihood estimation of $\theta$ must be one of the given observation
-but not necessarily any particular observation. 
-In case $\alpha = 5$ and $n=3$, compute the maximum likelihood estimate of $\theta$ when the 
-observations are $(1,2,4)$ or $(2,3,4)$.  
+Les données longitudinales font référence aux données collectées plusieurs fois sur le même échantillon ou entité. Par exemple, les données collectées sur une personne à différents moments peuvent être considérées comme des données longitudinales. Compte tenu de cette caractéristique des données longitudinales, nous pouvons nous attendre à la structure de corrélation suivante dans les données:
 
-\smallskip
-\paragraph{Solution}
-Let $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
-Write $g_{\theta}(x)$ for the joint probability density function of $X_i$'s 
-and $x_{(i)}$ for the $i$th smallest coordiante in $x$.
-If $x_i < 0$ or $x_i > \alpha$ for some $i$, then $g_{\theta}(x)=0$ for any $\theta$ so that 
-any estimate would be a maximum likelihood estimate.
-We exclude this pathology and prove that:
+\textbf{Autocorrélation :} Il pourrait y avoir une autocorrélation entre les mesures de poids à des moments consécutifs. En raison des caractéristiques physiologiques du corps humain, le poids ne change pas facilement en peu de temps. Par exemple, si le poids d'une personne est de 70 kg lors de la première mesure, lors de la deuxième mesure, son poids pourrait toujours être proche de 70 kg et il est peu probable qu'il augmente ou diminue soudainement de 10 kg.
 
-\begin{theorem}
-If $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, then $\theta_0 = x_{(i)}$ for some $i$.
-\end{theorem}
+\textbf{Continuité des habitudes de vie :} Les habitudes de vie, comme l'alimentation, l'exercice et les routines quotidiennes, ont un impact direct sur le poids. À court terme, ces habitudes sont susceptibles de rester relativement stables. Par conséquent, si les habitudes alimentaires et d'exercice à un moment donné entraînent une prise de poids, nous pourrions également observer une prise de poids dans les mesures ultérieures.
 
-\begin{proof}
-It never happens that $\theta_0 < x_{(1)}$
-because $g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (\theta_0,x_{(1)})$.
-Similarly, it never happens that $\theta_0 > x_{(n)}$ because
-$g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (x_{(n)}, \theta_0)$.
-We assume from now on that $\theta_0 \in [x_{(i)}, x_{(i+1)}]$ for some $i \in \{1,\cdots, n-1\}$.
-Suppose, for the sake of contradiction, that $x_{(i)} < \theta_0 < x_{(i+1)}$. We have:
+\textbf{Facteurs saisonniers :} À différents moments de l'année, le poids peut être affecté par les jours fériés, les changements saisonniers et les changements d'habitudes alimentaires associés. Par exemple, en hiver, le poids pourrait augmenter en raison de moins d'activités de plein air et de repas festifs plus copieux.
 
-\begin{equation*}
-    g_{\theta_{\theta_0}}(x) = \bracket{\frac{2}{\alpha}}^n  \frac{x_{(1)}}{\theta_0} \cdots \frac{x_{(i)}}{\theta_0}
-    \frac{\alpha-x_{(i+1)}}{\alpha - \theta_0} \cdots \frac{\alpha-x_{(n)}}{\theta_0}
-\end{equation*}
+\textbf{Influence d'autres variables :} Outre l'effet temporel, d'autres variables telles que l'âge, le sexe, la situation socio-économique (SES) et les habitudes de tabagisme peuvent également être liées aux variations de poids. Par exemple, le poids des adolescents pourrait augmenter avec l'âge. Le tabagisme peut affecter l'appétit et le métabolisme, influençant ainsi le poids.
 
-The numerator does not depend on $\theta_0$.
-This motivates us to define function $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ by:
+En résumé, nous pouvons nous attendre à ce qu'il y ait une forte corrélation positive entre les mesures de poids à des moments consécutifs pour un individu particulier. De plus, cette corrélation pourrait diminuer progressivement à mesure que l'intervalle de temps entre les deux points augmente. Par exemple, par rapport à la mesure du poids de la veille, la mesure du poids d'un mois plus tôt pourrait avoir une corrélation plus faible avec la mesure du poids actuelle.
 
-\begin{equation*}
-    h(\theta) = \frac{1}{\theta^i} \frac{1}{(\alpha-\theta)^{n-i}}
-\end{equation*}
+\section{Exercice 3b}
 
-Then the second derivative is:
+\textbf{Objectifs de la question}:
+\begin{enumerate}
+    \item Utiliser trois modèles différents pour vérifier l'effet des variables explicatives sur le poids (\texttt{weight}).
+    \item Pour ces modèles, nous devons comparer leur corrélation résiduelle.
+\end{enumerate}
 
-\begin{equation*}
-    h''(\theta) = i(i+1)\theta^{-i-2} (\alpha-\theta)^{i-n} + (n-i)(n-i+1)\theta^{-i} (\alpha-\theta)^{i-n-2} > 0
-\end{equation*}
+\textbf{Trois modèles}:
+\begin{enumerate}
+    \item Un modèle avec seulement une constante.
+    \item Un modèle avec \texttt{age} et \texttt{sex} comme variables explicatives.
+    \item Un modèle avec \texttt{age}, \texttt{sex}, \texttt{SES} et \texttt{smoking} comme variables explicatives.
+\end{enumerate}
 
-Therefore, $h$ is strictly convex and the maximum can only be at the boundary points.
-\end{proof}
+\textbf{Analyse du code}:
 
-We now demonstrate that the choice of $i$ is not unique in the above theorem. 
-The simplest case will be $x_i=x_j$ for any $i$ and any $j$. 
-For a nontrivial example, let $\alpha = 5$, $n = 3$.
-If $x=(2,3,4)$, then the maximum likelihood estimate is one of $\{2,3,4\}$.
-An estimate of $3$ or $4$ yields maximum likelihood $\frac{8}{375}$ while an estimate of $2$ yields likelihood $\frac{16}{1125}$.
-Therefore, the maximum likelihood estimate can be $3$ or $4$ and is not unique.
+1. \textbf{Modèle 1} (seulement une constante):
 
-Finally, the additional example $x=(1,2,4)$, estimate $\theta=1,2,4$ gives likelihood $\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
-repsectively. We conclude that $\theta=1$ is the maximum likelihood estimate in this case.////
-\end{CJK*}
+   \begin {lstlisting}[language=R]
+  modeles_lineaires_aucune <- list()
+residues_aucune <- rep(1,4)
+for (i in 1:4){
+    modele_i <- lm(donnee_separe[[i]]$weight ~ 1)
+    modeles_lineaires_aucune <- append(modeles_lineaires_aucune, modele_i)
+    residues_aucune[i] <- mean(residuals(modele_i))
+}
+  \end{lstlisting}
+
+2. \textbf{Modèle 2} (avec \texttt{age} et \texttt{sex} comme variables explicatives):
+
+   \begin {lstlisting}[language=R]
+   modeles_lineaires_age_sex <- list()
+residues_age_sex <- rep(1,4)
+for (i in 1:4){
+    modele_i <- lm(donnee_separe[[i]]$weight ~ donnee_separe[[i]]$age + donnee_separe[[i]]$sex)
+    modeles_lineaires_age_sex <- append(modeles_lineaires_age_sex, modele_i)
+    residues_age_sex[i] <- mean(residuals(modele_i))
+}
+
+   \end{lstlisting}
+
+3. \textbf{Modèle 3} (avec \texttt{age}, \texttt{sex}, \texttt{SES} et \texttt{smoking} comme variables explicatives):
+
+    \begin {lstlisting}[language=R]
+   modeles_lineaires_age_SES_sex_smoking <- list()
+residues_age_SES_sex_smoking <- rep(1,4)
+for (i in 1:4){
+    modele_i <- lm(donnee_separe[[i]]$weight ~ donnee_separe[[i]]$age + donnee_separe[[i]]$sex + 
+donnee_separe[[i]]$SES + donnee_separe[[i]]$smoking)
+    modeles_lineaires_age_SES_sex_smoking <- append(
+modeles_lineaires_age_SES_sex_smoking,  modele_i)
+    residues_age_SES_sex_smoking[i] <- mean(residuals(modele_i))
+}
+
+   \end{lstlisting}
+
+4. \textbf{Comparaison des corrélations résiduelles des modèles} :
+
+   \begin {lstlisting}[language=R]
+   
+print("Les corrélations résiduelles sont :")
+
+print(cor(residues_aucune, residues_age_sex)) # -0.5644551
+print(cor(residues_age_sex, residues_age_SES_sex_smoking)) # -0.9982123
+print(cor(residues_age_SES_sex_smoking, residues_aucune)) # 0.5159088
+
+   \end{lstlisting}
+
+\begin{itemize}
+    \item \(-0.5644551\): Cette valeur représente la corrélation entre les résidus du premier modèle (sans variables explicatives, seulement l'ordonnée à l'origine) et ceux du deuxième modèle (avec \textit{age} et \textit{sex} comme variables explicatives). Cette corrélation négative signifie que lorsque les résidus du premier modèle augmentent, ceux du deuxième modèle ont tendance à diminuer, et vice versa.
+    
+    \item \(-0.9982123\): Cette valeur représente la corrélation entre les résidus du deuxième modèle (avec \textit{age} et \textit{sex} comme variables explicatives) et ceux du troisième modèle (avec \textit{age}, \textit{sex}, \textit{SES} et \textit{smoking} comme variables explicatives). Cette corrélation, très proche de -1, indique une forte relation négative entre les résidus des deux modèles. Cela signifie que lorsque les résidus du deuxième modèle augmentent, ceux du troisième modèle ont tendance à diminuer, et vice versa.
+    
+    \item \(0.5159088\): Cette valeur représente la corrélation entre les résidus du troisième modèle (avec \textit{age}, \textit{sex}, \textit{SES} et \textit{smoking} comme variables explicatives) et ceux du premier modèle (sans variables explicatives, seulement l'ordonnée à l'origine). Cette corrélation positive signifie que lorsque les résidus du troisième modèle augmentent, ceux du premier modèle ont également tendance à augmenter, et vice versa.
+\end{itemize}
+
+En conclusion, ces valeurs de corrélation résiduelle reflètent les différences de performance prédictive et de structure des résidus entre les trois modèles. En comparant ces valeurs, on peut obtenir des insights sur l'efficacité des modèles et le choix des variables. Par exemple, la forte corrélation négative entre les deuxième et troisième modèles pourrait signifier qu'il y a un chevauchement dans la sélection des variables entre eux, tandis que le premier modèle pourrait avoir une performance prédictive différente en raison de l'absence de variables explicatives.
+   
+\section{Exercice 3c}
+
+On utilise SES comme une variable explicative pour la variable de réponse weight
+
+\textbf{3.1) Modèle linéaire en assumant l'indépendance entre toutes les observations:}
+
+\begin{lstlisting}[language=R]
+modele_lineaire <- lm(weight ~ SES, data = donnee)
+print(summary(modele_lineaire))  #std error for ses = 0.1328
+\end{lstlisting}
+
+On trouve que std error for SES est 0.1328
+
+\textbf{3.2) Modèle linéaire généralisé (normale) où on assume une matrice de corrélation interchangeable:}
+
+\begin{lstlisting}[language=R]
+library(nlme)
+glm_normal <- gls(weight ~ SES, data = donnee, correlation = corCompSymm(form = ~ 1 | SES))
+print(summary(glm_normal)) #std error for ses = 0.1868304
+\end{lstlisting}
+
+On trouve que std error for SES est 0.1868304
+
+\textbf{3.3) GEE avec une matrice de corrélation interchangeable:}
+
+\begin{lstlisting}[language=R]
+require(geepack)
+GEE <- summary(geese(weight ~ SES, id = ID, data = donnee, corstr = 'exchangeable'))
+print(GEE) #std error for ses est 0.1646921
+\end{lstlisting}
+
+On trouve que std error for SES est 0.1646921
+
+\textbf{3.4) Modèle mixte avec une ordonnée à l'origine et une pente aléatoire pour chaque individu:}
+
+\begin{lstlisting}[language=R]
+library(lme4)
+modele_mixte <- lmer(weight ~ (1 + SES | ID), data = donnee)
+print(summary(modele_mixte)) #ne converge pas
+print(confint(modele_lineaire))
+\end{lstlisting}
+
+Lors de l'estimation des paramètres du modèle, le processus d'estimation n'a pas atteint une solution stable, de sorte que le modèle n'a pas convergé.
+
+\textbf{Conclusion:}
+
+On sait que des erreurs standard plus petites impliquent des estimations plus précises des paramètres du modèle, tandis que des erreurs standard plus grandes indiquent une plus grande incertitude. Ainsi, parmi les quatre modèles mentionnés ci-dessus, le modèle 3.1 présente l'erreur standard la plus faible (0.1328).
+On conclut que le modèle linéaire pour 3.1) est le meilleur modèle pour les données
+
 \end{document}
+
+
