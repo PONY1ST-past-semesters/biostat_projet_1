@@ -1,77 +1,124 @@
-\documentclass[../main.tex]{subfiles}
+\documentclass{article}  
+\usepackage{listings}   
+\usepackage{graphicx}   
 
 \begin{document}
-\section{Exercice 2abcd}
-\begin{CJK*}{UTF8}{gbsn}
-Fix $\alpha > 0$. For a $\theta \in (0, \alpha)$,
-let $\{X_i\}_{i=1}^n$ be a sequence of real independent identically distributed random variable 
-defined on some probability space $(\Omega, F, P)$
-with common probability density function with respect to the Lebesgue measure:
+Dans cette section, nous analyserons les données à l'aide du logiciel R pour répondre à la question a.
 
-\begin{equation*}
-    f_{\theta}(x) = 
-    \begin{cases}
-        \frac{2x}{\alpha \theta} \tab[1.3cm] x \in [0, \theta] \\
-        \frac{2(\alpha-x)}{\alpha(\alpha - \theta)} \tab[0.6cm] x \in [\theta, \alpha] \\
-        0 \tab[1.5cm] \text{otherwise}
-    \end{cases}
-\end{equation*}
+\subsection{Importation de données}
 
-Prove that the maximum likelihood estimation of $\theta$ must be one of the given observation
-but not necessarily any particular observation. 
-In case $\alpha = 5$ and $n=3$, compute the maximum likelihood estimate of $\theta$ when the 
-observations are $(1,2,4)$ or $(2,3,4)$.  
+Tout d'abord, nous importons l'ensemble de données et examinons les informations de base sur les données.
 
-\smallskip
-\paragraph{Solution}
-Let $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
-Write $g_{\theta}(x)$ for the joint probability density function of $X_i$'s 
-and $x_{(i)}$ for the $i$th smallest coordiante in $x$.
-If $x_i < 0$ or $x_i > \alpha$ for some $i$, then $g_{\theta}(x)=0$ for any $\theta$ so that 
-any estimate would be a maximum likelihood estimate.
-We exclude this pathology and prove that:
+\begin{lstlisting}[language=R]
+library(rsq)
 
-\begin{theorem}
-If $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, then $\theta_0 = x_{(i)}$ for some $i$.
-\end{theorem}
+data("hcrabs")
+attach (hcrabs)
 
-\begin{proof}
-It never happens that $\theta_0 < x_{(1)}$
-because $g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (\theta_0,x_{(1)})$.
-Similarly, it never happens that $\theta_0 > x_{(n)}$ because
-$g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (x_{(n)}, \theta_0)$.
-We assume from now on that $\theta_0 \in [x_{(i)}, x_{(i+1)}]$ for some $i \in \{1,\cdots, n-1\}$.
-Suppose, for the sake of contradiction, that $x_{(i)} < \theta_0 < x_{(i+1)}$. We have:
+\end{lstlisting}
 
-\begin{equation*}
-    g_{\theta_{\theta_0}}(x) = \bracket{\frac{2}{\alpha}}^n  \frac{x_{(1)}}{\theta_0} \cdots \frac{x_{(i)}}{\theta_0}
-    \frac{\alpha-x_{(i+1)}}{\alpha - \theta_0} \cdots \frac{\alpha-x_{(n)}}{\theta_0}
-\end{equation*}
+\section{Exercice 2a}
 
-The numerator does not depend on $\theta_0$.
-This motivates us to define function $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ by:
+\subsection{Modèle de régression de Poisson}
 
-\begin{equation*}
-    h(\theta) = \frac{1}{\theta^i} \frac{1}{(\alpha-\theta)^{n-i}}
-\end{equation*}
+Ensuite,nous avons utilisé un modèle de régression de Poisson pour analyser les données et prédire le nombre de satellites chez les araignées de mer mâles.
 
-Then the second derivative is:
+\begin{lstlisting}[language=R]
+modele_poisson <- 
+glm ( num.satellites ~ width + spine + color, family = poisson ( link = log ) ,
+data = hcrabs ) 
+\end{lstlisting}
 
-\begin{equation*}
-    h''(\theta) = i(i+1)\theta^{-i-2} (\alpha-\theta)^{i-n} + (n-i)(n-i+1)\theta^{-i} (\alpha-\theta)^{i-n-2} > 0
-\end{equation*}
+\subsection{Le test de surdispersion}
 
-Therefore, $h$ is strictly convex and the maximum can only be at the boundary points.
-\end{proof}
+On fait puis le test de surdispersion et évaluer le paramèter de sur-dispersion.
 
-We now demonstrate that the choice of $i$ is not unique in the above theorem. 
-The simplest case will be $x_i=x_j$ for any $i$ and any $j$. 
-For a nontrivial example, let $\alpha = 5$, $n = 3$.
-If $x=(2,3,4)$, then the maximum likelihood estimate is one of $\{2,3,4\}$.
-An estimate of $3$ or $4$ yields maximum likelihood $\frac{8}{375}$ while an estimate of $2$ yields likelihood $\frac{16}{1125}$.
-Therefore, the maximum likelihood estimate can be $3$ or $4$ and is not unique.
+\begin{lstlisting}[language=R]
+library (AER)
+print(dispersiontest(modele_poisson))
+\end{lstlisting}
 
-Finally, the additional example $x=(1,2,4)$, estimate $\theta=1,2,4$ gives likelihood $\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
-repsectively. We conclude that $\theta=1$ is the maximum likelihood estimate in this case.////
-\end{CJK*}
+Le test donne que le paramètre de dispersion est 3.143975 avec p-valeur 4.07e-08.
+Par conséquent, la sur-dispersion est significative.
+
+Cela signifie que les variations du nombre de satellites mâles ne sont pas bien prises en compte dans le modèle de Poisson standard, et que des modèles de surdiscrétisation plus complexes peuvent être envisagés pour mieux s'adapter à ces données.
+
+\section{Exercice 2b}
+
+Lorsque nous effectuons une régression de Poisson, nous supposons que la variance est égale à la moyenne, une propriété inhérente à la distribution de Poisson. Cependant, les données réelles peuvent ne pas toujours respecter cette supposition. Lorsque la variance observée est supérieure à la moyenne prévue, nous parlons de \textbf{surdispersion}.
+
+\subsection*{Signification de la surdispersion}
+
+Si le test de surdispersion rejette l'hypothèse nulle, cela signifie que la dispersion observée dans les données dépasse ce qui serait attendu sous une distribution de Poisson. Cela peut être dû à :
+\begin{itemize}
+    \item Une hétérogénéité non observée.
+    \item Une accumulation de comptages issus de plusieurs processus indépendants.
+\end{itemize}
+
+L'utilisation d'une régression de Poisson en présence de surdispersion peut entraîner une sous-estimation des erreurs standard des coefficients, conduisant ainsi à des $p$-valeurs sous-estimées et augmentant le risque d'erreurs de type I.
+
+\subsection*{Méthode alternative}
+
+Face à la surdispersion, on se tourne généralement vers d'autres modèles pour les données de comptage. La \textbf{régression binomiale négative} est un choix courant car elle introduit un paramètre supplémentaire pour capturer la surdispersion. Plus précisément, la distribution binomiale négative peut être considérée comme la somme de plusieurs distributions géométriques indépendantes, où chaque distribution géométrique représente le nombre d'essais nécessaires avant la prochaine occurrence d'un événement.
+
+\section{Exercice 2c}
+ Il y a 2*4-1=15 modèles possibles, il faut choisir une critière pour sélectionner le meilleur modèle
+Disons, on choisit le critère AIC pour sélectionner le meilleur modèle
+Rappel : si on a k modèles, qui ont les valeurs d'AIC  AIC-1, AIC—2, ..., AIC-k resptivement
+Les valeurs exp(-0.5*(AIC-i - AIC-min)) sont les probabilités que le modèle i 
+minimise la perte d'informations
+
+\begin {lstlisting}[language=R]
+modele_color <- glm ( num.satellites ~ color, family = poisson ( link = log ) ,data = hcrabs ) 
+modele_spine <- glm ( num.satellites ~ spine, family = poisson ( link = log ) ,data = hcrabs )
+modele_width <- glm ( num.satellites ~ width, family = poisson ( link = log ) ,data = hcrabs )
+modele_weight <- glm ( num.satellites ~ weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_spine <- glm ( num.satellites ~ color + spine, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_width <- glm ( num.satellites ~ color + width, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_weight <- glm ( num.satellites ~ color + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_spine_width <- glm ( num.satellites ~ spine + width, family = poisson ( link = log ) ,data = hcrabs )
+modele_spine_weight <- glm ( num.satellites ~ spine + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_width_weight <- glm ( num.satellites ~ width + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_spine_width <- glm ( num.satellites ~ color + spine + width, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_spine_weight <- glm ( num.satellites ~ color + spine + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_width_weight <- glm ( num.satellites ~ color + width + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_spine_width_weight <- glm ( num.satellites ~ spine + width + weight, family = poisson ( link = log ) ,data = hcrabs )
+modele_color_spine_width_weight <- glm ( num.satellites ~ color + spine + width + weight, family = poisson ( link = log ) ,data = hcrabs )
+
+modeles <- list(modele_color, modele_spine, modele_width, modele_weight, 
+modele_color_spine, modele_color_width, modele_color_weight, modele_spine_width, 
+modele_spine_weight, modele_width_weight, modele_color_spine_width, 
+modele_color_spine_weight, modele_color_width_weight, 
+modele_spine_width_weight, modele_color_spine_width_weight)
+
+AICs <- rep(0, 15)
+for (i in 1:15) {
+  AICs[i] <- AIC(modeles[[i]])
+}
+
+print(AICs)
+
+min_AIC <- min(AICs)
+proba <- rep(0, 15)
+for (i in 1:15) {
+  proba[i] <- exp(0.5*(min_AIC- AICs[i]))
+}
+
+print(proba)
+
+print(which.max(proba))
+
+\end{lstlisting}
+ On trouve que AIC = 7, le modèle color-weight est le meilleur modèle
+
+\section{Exercice 2d}
+
+ Analyse des résidus pour le modèle color-weight choisi précédemment dans la question c).
+
+  L'analyse choisit d'utiliser les résidus d'Anscombe. Les résidus d'Anscombe sont spécifiquement conçus pour les modèles linéaires généralisés et offrent de bonnes propriétés pour identifier des valeurs atypiques ou des observations influentes. Ce lien https://www.sfu.ca/sasdoc/sashtml/insight/chap39/sect57.htm fournit des informations supplémentaires sur les résidus d'Anscombe.
+
+  \begin {lstlisting}[language=R]
+  library(surveillance)
+plot(anscombe.residuals(modele_color_weight, phi =1))
+  \end{lstlisting}
 \end{document}
