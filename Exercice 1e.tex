@@ -3,105 +3,69 @@
 \begin{document}
 \begin{CJK*}{UTF8}{gbsn}
 \section*{Exercice 1e}
+Soit $\{Y_i\}_{i=1}^m$, $\{a_i\}_{i=1}^m$, $\{b_i\}_{i=1}^m$, $\{\epsilon_i\}_{i=1}^m$
+trois suites de variables aléatoires à valeur $\mathbb{R}^5$, $\mathbb{R}$, $\mathbb{R}$ et $\mathbb{R}^5$
+respectivement tout définies sur une espace de probabilité commune $(\Omega, F, P)$. 
+On suppose que :
 
-1. \textbf{Définition du modèle}:
-\[ Y_{ij} = a_i + b_i X_{ij} + \beta X_{ij} + \epsilon_{ij} \]
-où:
-\begin{itemize}
-    \item \( Y_{ij} \) est la réponse observée pour l'individu \( i \) à l'occasion \( j \).
-    \item \( a_i \) est l'interception aléatoire pour l'individu \( i \).
-    \item \( b_i \) est la pente aléatoire pour l'individu \( i \).
-    \item \( \beta \) est la pente fixe associée à la variable explicative \( X \).
-    \item \( X_{ij} \) est la variable explicative pour l'individu \( i \) à l'occasion \( j \).
-    \item \( \epsilon_{ij} \) est l'erreur résiduelle pour l'individu \( i \) à l'occasion \( j \).
-\end{itemize}
+\begin{enumerate}
+    \item Les quatres $\sigma$-algébres générées par les quatre suites sont indépendantes.
+    \item Il y existe une matrice $X$ de taille $5 \times 5$. Pour tout $j \in \{1, \dots, 5\}$, on a, presque partout :
+    
+    \begin{equation*}
+        Y_{ij} = a_i + b_i X_{ij} + \beta X_{ij} + \epsilon_{ij}
+    \end{equation*}
+    \item Il existe constantes $\tau > 0$, $\psi > 0$, $\sigma > 0$ et $\rho \in (0,1)$ tels que, 
+    pour tout $i \in \{1, \cdots, m\}$,
+    $a_i$ est la loi normale avec moyen $4$ et variance $\tau^2$, 
+    $b_i$ est la loi normale avec moyen $0$ et variance $\psi^2$ et:
 
-2. \textbf{Hypothèses sur les composants aléatoires}:
+    \begin{equation*}
+        \text{Cov}(\epsilon_{i}) = \sigma^2
+        \begin{bmatrix}
+            1 & \rho & \rho^2 & \rho^3 & \rho^4 \\
+            \rho & 1 & \rho & \rho^2 & \rho^3 \\
+            \rho^2 & \rho & 1 & \rho & \rho^2 \\
+            \rho^3 & \rho^2 & \rho & 1 & \rho \\
+            \rho^4 & \rho^3 & \rho^2 & \rho & 1
+        \end{bmatrix}
+    \end{equation*}
+\end{enumerate}
 
-\begin{equation*}
-    \begin{split}
-        & a_i \sim N(4, \tau^2) 
-        \\ & b_i \sim N(0, \psi^2)
-        \\ & \text{Cov}(\epsilon_{ij}) = \sigma^2 V
-    \end{split}
-\end{equation*}
-
-où \( V \) est une matrice qui définit une corrélation de type AR(1) entre les erreurs pour un même individu \( i \).
+Séparez et présentez le formule de $Y_{ij}$ comme deux composantes: une composante de régression
+linéaire et une erreur. Calculer $\text{Cov}(Y_i)$ pour chaque $i \in \{1, \dots, m\}$.
 
 \paragraph{Solution} 
-Nous revoyons d'abord le modèle donné dans la question:
 
-\[
-Y_{ij} = a_i + b_i X_{ij} + \beta X_{ij} + \epsilon_{ij}
-\]
-
-i) Pour séparer le modèle en deux composantes, considérons d'abord la partie de régression linéaire:
-
-La partie de régression linéaire contient les éléments déterministes ou systématiques du modèle. Elle représente la tendance générale des données \(X_{ij}\). Dans ce modèle, la partie linéaire est:
-
-\[
-a_i + b_i X_{ij} + \beta X_{ij}
-\]
-
-Nous pouvons combiner les termes associés à \(X_{ij}\):
-
-\[
-a_i + (b_i + \beta) X_{ij}
-\]
-
-Ceci est la partie de régression linéaire.
-
-Ensuite, considérons la partie d'erreur \(W_{ij}\):
-
-\[
-W_{ij} = \epsilon_{ij}
-\]
-
-L'erreur \(W_{ij}\) reflète la variabilité que la partie linéaire ne peut pas expliquer. Elle est une combinaison des erreurs individuelles et globales, mais dans ce modèle, elle est seulement représentée par \(\epsilon_{ij}\).
-
-En conclusion, le modèle peut être séparé comme:
+Comme la partie de régression linéaire contient les termes déterministes ou systématiques du modèle,
+le modèle peut être séparé comme, pour tout $i \in \{1, \dots, m\}$ et $j \in \{1, \dots, 5\}$:
 
 \[
 Y_{ij} = a_i + (b_i + \beta) X_{ij} + W_{ij}
 \]
 
-où:
-\begin{itemize}
-    \item \(a_i + (b_i + \beta) X_{ij}\) est la partie de régression linéaire.
-    \item \(W_{ij}\) est la partie d'erreur.
-\end{itemize}
-
-Ceci est cohérent avec la façon dont nous séparons les modèles linéaires en classe (une partie déterministe et une partie d'erreur).
-
-ii) Pour la variance de \( Y_{ij} \), nous considérons la somme des variances des trois effets aléatoires (intercept, pente, et l'erreur) :
+Ici \(a_i + (b_i + \beta) X_{ij}\) est la partie de régression linéaire et \(W_{ij}\) est la partie d'erreur.
+Ensuite, comme les quatre suites sont indépendants, 
+on obtient, pour chaque $i \in \{1, \dots, m\}$ et $j \in \{1, \dots, 5\}$, que :
 
 \begin{equation*}
 \text{Var}(Y_{ij}) = \text{Var}(a_i) + \text{Var}(b_i X_{ij}) + \text{Var}(\epsilon_{ij})
 \end{equation*}
 
-En utilisant les informations fournies :
+En utilisant les normalités assumées :
 
 \begin{equation*}
 \text{Var}(Y_{ij}) = \tau^2 + \psi^2 X_{ij}^2 + \sigma^2
 \end{equation*}
 
-Cette variance sera l'élément diagonal de la matrice de covariance.
-La covariance entre deux observations de \( Y \) à deux moments différents \( j \) et \( k \) est donnée par :
+Si $j \neq k$, on a :
 
 \begin{equation*}
 \text{Cov}(Y_{ij}, Y_{ik}) = \text{Cov}(a_i + b_i X_{ij} + \epsilon_{ij}, a_i + b_i X_{ik} + \epsilon_{ik})
+=  \tau^2 + \psi^2 X_{ij} X_{ik} + \sigma^2 \rho^{|j-k|}
 \end{equation*}
 
-En tenant compte des effets aléatoires \( a_i \) et \( b_i \) qui sont indépendants, et de la structure de covariance entre les erreurs \( \epsilon_{ij} \) qui est définie par la matrice \( V \) :
-
-\begin{equation*}
-\text{Cov}(Y_{ij}, Y_{ik}) = \tau^2 + \psi^2 X_{ij} X_{ik} + \sigma^2 \rho^{|j-k|}
-\end{equation*}
-
-où \( \rho^{|j-k|} \) est défini par la structure AR(1) de la matrice \( V \).
-
-Nous pouvons maintenant construire la matrice de covariance $5 \times 5$ 
-\( \text{Cov}(Y_i) \) pour chaque individu \( i \) en utilisant les formules de variance et de covariance ci-dessus.
+Le calcul est complet. ////
 
 \end{CJK*}
 \end{document}
