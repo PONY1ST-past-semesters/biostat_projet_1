@@ -1,77 +1,44 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\section{Exercice 1d}
 \begin{CJK*}{UTF8}{gbsn}
-Fix $\alpha > 0$. For a $\theta \in (0, \alpha)$,
-let $\{X_i\}_{i=1}^n$ be a sequence of real independent identically distributed random variable 
-defined on some probability space $(\Omega, F, P)$
-with common probability density function with respect to the Lebesgue measure:
+\section*{Exercice 1d}
+Expliquez assez brièvement, pourquoi les modèles de régression linéaire généralisés
+ne nécessitent pas réellement la spécification complète de la distribution de
+la variable de réponse pour l’estimation des coefficients.
 
-\begin{equation*}
-    f_{\theta}(x) = 
-    \begin{cases}
-        \frac{2x}{\alpha \theta} \tab[1.3cm] x \in [0, \theta] \\
-        \frac{2(\alpha-x)}{\alpha(\alpha - \theta)} \tab[0.6cm] x \in [\theta, \alpha] \\
-        0 \tab[1.5cm] \text{otherwise}
-    \end{cases}
-\end{equation*}
-
-Prove that the maximum likelihood estimation of $\theta$ must be one of the given observation
-but not necessarily any particular observation. 
-In case $\alpha = 5$ and $n=3$, compute the maximum likelihood estimate of $\theta$ when the 
-observations are $(1,2,4)$ or $(2,3,4)$.  
-
-\smallskip
 \paragraph{Solution}
-Let $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
-Write $g_{\theta}(x)$ for the joint probability density function of $X_i$'s 
-and $x_{(i)}$ for the $i$th smallest coordiante in $x$.
-If $x_i < 0$ or $x_i > \alpha$ for some $i$, then $g_{\theta}(x)=0$ for any $\theta$ so that 
-any estimate would be a maximum likelihood estimate.
-We exclude this pathology and prove that:
-
-\begin{theorem}
-If $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, then $\theta_0 = x_{(i)}$ for some $i$.
-\end{theorem}
-
-\begin{proof}
-It never happens that $\theta_0 < x_{(1)}$
-because $g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (\theta_0,x_{(1)})$.
-Similarly, it never happens that $\theta_0 > x_{(n)}$ because
-$g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (x_{(n)}, \theta_0)$.
-We assume from now on that $\theta_0 \in [x_{(i)}, x_{(i+1)}]$ for some $i \in \{1,\cdots, n-1\}$.
-Suppose, for the sake of contradiction, that $x_{(i)} < \theta_0 < x_{(i+1)}$. We have:
+Pour une mesure $\sigma$-finie $\nu$ définie sur une espace mesurable $(\Omega, F)$,
+une famille $\mathcal{P} = \{f_{\theta}d\nu : \theta \in \Theta \subseteq \mathbb{R}\}$ continue 
+absolument est appelé une famille exponentiel si, 
+dans une forme plus simple et comme dans les notes de cours, on a pour tout $x \in \Omega$ que :
 
 \begin{equation*}
-    g_{\theta_{\theta_0}}(x) = \bracket{\frac{2}{\alpha}}^n  \frac{x_{(1)}}{\theta_0} \cdots \frac{x_{(i)}}{\theta_0}
-    \frac{\alpha-x_{(i+1)}}{\alpha - \theta_0} \cdots \frac{\alpha-x_{(n)}}{\theta_0}
+    f_{\theta}(x) = \exp\curly{\frac{x\theta -b(\theta)}{a(\phi)} + c(x, \phi)}
 \end{equation*}
 
-The numerator does not depend on $\theta_0$.
-This motivates us to define function $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ by:
+Ici $\phi > 0$ est un paramètre de dispersion, $a : \mathbb{R} \to \mathbb{R}$,
+$b : \mathbb{R} \to \mathbb{R}$ et $c : \Omega \times \mathbb{R} \to \mathbb{R}$ 
+sont des fonctions telles que $a \neq 0$, $b$ est trois fois différentiables et $b'' > 0$.
+On obtient les modèles linéaires généralisés si on utilise $\theta = g(\eta)$ pour 
+une fonction de lien $g: \mathbb{R} \to \mathbb{R}$ et $\eta = \langle x , \beta \rangle_{\mathbb{R}^p}$ 
+pour un vector constante $x \in \mathbb{R}^p$ et les paramètres $\beta \in \mathbb{R}^p$.
+Soit $Y$ une réalisation de $f_{\theta} d \nu \in \mathcal{P}$.
+Comme dans le notes de cours, on a que :
 
 \begin{equation*}
-    h(\theta) = \frac{1}{\theta^i} \frac{1}{(\alpha-\theta)^{n-i}}
+    \mathbb{E}[Y] = b'(\theta); \tab[0.5cm] \text{Var}(Y) = b''(\theta) a(\phi)
 \end{equation*}
 
-Then the second derivative is:
+On observe que la variance est une fonction de moyen, c'est-à-dire, on peut tout simpliment
+dériver le moyen afin d'obtenir la variance. En effet, si $Y$ a plus de moments, 
+les propriétés de la famille exponentiel ditent que tout les moments peuvent être dérivés
+en fonction du moyen. Si $Y$ a une fonction génératrice des moments, 
+alors sa fonction génératrice des moments est aussi contrôlé par le moyen.
+En conclusion, contrôler le moyen égale contrôler la distribution si $Y$ est suffisament "régulière".
+Le pramètre $\beta$, dans un autre côté, ne dépend que le moment. 
+Il s'agit toujours d'estimer le moment et puis utiliser le moment pour estimer $\beta$
+en faisant les inversions des fonctions ou matrices, sans spécifier la distribution de $Y$.////
 
-\begin{equation*}
-    h''(\theta) = i(i+1)\theta^{-i-2} (\alpha-\theta)^{i-n} + (n-i)(n-i+1)\theta^{-i} (\alpha-\theta)^{i-n-2} > 0
-\end{equation*}
-
-Therefore, $h$ is strictly convex and the maximum can only be at the boundary points.
-\end{proof}
-
-We now demonstrate that the choice of $i$ is not unique in the above theorem. 
-The simplest case will be $x_i=x_j$ for any $i$ and any $j$. 
-For a nontrivial example, let $\alpha = 5$, $n = 3$.
-If $x=(2,3,4)$, then the maximum likelihood estimate is one of $\{2,3,4\}$.
-An estimate of $3$ or $4$ yields maximum likelihood $\frac{8}{375}$ while an estimate of $2$ yields likelihood $\frac{16}{1125}$.
-Therefore, the maximum likelihood estimate can be $3$ or $4$ and is not unique.
-
-Finally, the additional example $x=(1,2,4)$, estimate $\theta=1,2,4$ gives likelihood $\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
-repsectively. We conclude that $\theta=1$ is the maximum likelihood estimate in this case.////
 \end{CJK*}
 \end{document}

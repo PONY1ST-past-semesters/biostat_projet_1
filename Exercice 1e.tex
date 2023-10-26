@@ -1,77 +1,71 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\section{Exercice 1e}
 \begin{CJK*}{UTF8}{gbsn}
-Fix $\alpha > 0$. For a $\theta \in (0, \alpha)$,
-let $\{X_i\}_{i=1}^n$ be a sequence of real independent identically distributed random variable 
-defined on some probability space $(\Omega, F, P)$
-with common probability density function with respect to the Lebesgue measure:
+\section*{Exercice 1e}
+Soit $\{Y_i\}_{i=1}^m$, $\{a_i\}_{i=1}^m$, $\{b_i\}_{i=1}^m$, $\{\epsilon_i\}_{i=1}^m$
+trois suites de variables aléatoires à valeur $\mathbb{R}^5$, $\mathbb{R}$, $\mathbb{R}$ et $\mathbb{R}^5$
+respectivement tout définies sur une espace de probabilité commune $(\Omega, F, P)$. 
+On suppose que :
+
+\begin{enumerate}
+    \item Les quatres $\sigma$-algébres générées par les quatre suites sont indépendantes.
+    \item Il y existe une matrice $X$ de taille $5 \times 5$. Pour tout $j \in \{1, \dots, 5\}$, on a, presque partout :
+    
+    \begin{equation*}
+        Y_{ij} = a_i + b_i X_{ij} + \beta X_{ij} + \epsilon_{ij}
+    \end{equation*}
+    \item Il existe constantes $\tau > 0$, $\psi > 0$, $\sigma > 0$ et $\rho \in (0,1)$ tels que, 
+    pour tout $i \in \{1, \cdots, m\}$,
+    $a_i$ est la loi normale avec moyen $4$ et variance $\tau^2$, 
+    $b_i$ est la loi normale avec moyen $0$ et variance $\psi^2$ et:
+
+    \begin{equation*}
+        \text{Cov}(\epsilon_{i}) = \sigma^2
+        \begin{bmatrix}
+            1 & \rho & \rho^2 & \rho^3 & \rho^4 \\
+            \rho & 1 & \rho & \rho^2 & \rho^3 \\
+            \rho^2 & \rho & 1 & \rho & \rho^2 \\
+            \rho^3 & \rho^2 & \rho & 1 & \rho \\
+            \rho^4 & \rho^3 & \rho^2 & \rho & 1
+        \end{bmatrix}
+    \end{equation*}
+\end{enumerate}
+
+Séparez et présentez le formule de $Y_{ij}$ comme deux composantes: une composante de régression
+linéaire et une erreur. Calculer $\text{Cov}(Y_i)$ pour chaque $i \in \{1, \dots, m\}$.
+
+\paragraph{Solution} 
+
+Comme la partie de régression linéaire contient les termes déterministes ou systématiques du modèle,
+le modèle peut être séparé comme, pour tout $i \in \{1, \dots, m\}$ et $j \in \{1, \dots, 5\}$:
+
+\[
+Y_{ij} = a_i + (b_i + \beta) X_{ij} + W_{ij}
+\]
+
+Ici \(a_i + (b_i + \beta) X_{ij}\) est la partie de régression linéaire et \(W_{ij}\) est la partie d'erreur.
+Ensuite, comme les quatre suites sont indépendants, 
+on obtient, pour chaque $i \in \{1, \dots, m\}$ et $j \in \{1, \dots, 5\}$, que :
 
 \begin{equation*}
-    f_{\theta}(x) = 
-    \begin{cases}
-        \frac{2x}{\alpha \theta} \tab[1.3cm] x \in [0, \theta] \\
-        \frac{2(\alpha-x)}{\alpha(\alpha - \theta)} \tab[0.6cm] x \in [\theta, \alpha] \\
-        0 \tab[1.5cm] \text{otherwise}
-    \end{cases}
+\text{Var}(Y_{ij}) = \text{Var}(a_i) + \text{Var}(b_i X_{ij}) + \text{Var}(\epsilon_{ij})
 \end{equation*}
 
-Prove that the maximum likelihood estimation of $\theta$ must be one of the given observation
-but not necessarily any particular observation. 
-In case $\alpha = 5$ and $n=3$, compute the maximum likelihood estimate of $\theta$ when the 
-observations are $(1,2,4)$ or $(2,3,4)$.  
-
-\smallskip
-\paragraph{Solution}
-Let $x = (x_1, \cdots, x_n) \in \mathbb{R}^n$ be given. 
-Write $g_{\theta}(x)$ for the joint probability density function of $X_i$'s 
-and $x_{(i)}$ for the $i$th smallest coordiante in $x$.
-If $x_i < 0$ or $x_i > \alpha$ for some $i$, then $g_{\theta}(x)=0$ for any $\theta$ so that 
-any estimate would be a maximum likelihood estimate.
-We exclude this pathology and prove that:
-
-\begin{theorem}
-If $0 \leqslant x_{(1)} \leqslant \cdots \leqslant x_{(n)} \leqslant \alpha$, then $\theta_0 = x_{(i)}$ for some $i$.
-\end{theorem}
-
-\begin{proof}
-It never happens that $\theta_0 < x_{(1)}$
-because $g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (\theta_0,x_{(1)})$.
-Similarly, it never happens that $\theta_0 > x_{(n)}$ because
-$g_{\theta_1}(x) > g_{\theta_0}(x)$ whenever $\theta_1 \in (x_{(n)}, \theta_0)$.
-We assume from now on that $\theta_0 \in [x_{(i)}, x_{(i+1)}]$ for some $i \in \{1,\cdots, n-1\}$.
-Suppose, for the sake of contradiction, that $x_{(i)} < \theta_0 < x_{(i+1)}$. We have:
+En utilisant les normalités assumées :
 
 \begin{equation*}
-    g_{\theta_{\theta_0}}(x) = \bracket{\frac{2}{\alpha}}^n  \frac{x_{(1)}}{\theta_0} \cdots \frac{x_{(i)}}{\theta_0}
-    \frac{\alpha-x_{(i+1)}}{\alpha - \theta_0} \cdots \frac{\alpha-x_{(n)}}{\theta_0}
+\text{Var}(Y_{ij}) = \tau^2 + \psi^2 X_{ij}^2 + \sigma^2
 \end{equation*}
 
-The numerator does not depend on $\theta_0$.
-This motivates us to define function $h: [x_{(i)}, x_{(i+1)}] \to \mathbb{R}$ by:
+Si $j \neq k$, on a :
 
 \begin{equation*}
-    h(\theta) = \frac{1}{\theta^i} \frac{1}{(\alpha-\theta)^{n-i}}
+\text{Cov}(Y_{ij}, Y_{ik}) = \text{Cov}(a_i + b_i X_{ij} + \epsilon_{ij}, a_i + b_i X_{ik} + \epsilon_{ik})
+=  \tau^2 + \psi^2 X_{ij} X_{ik} + \sigma^2 \rho^{|j-k|}
 \end{equation*}
 
-Then the second derivative is:
+Le calcul est complet. ////
 
-\begin{equation*}
-    h''(\theta) = i(i+1)\theta^{-i-2} (\alpha-\theta)^{i-n} + (n-i)(n-i+1)\theta^{-i} (\alpha-\theta)^{i-n-2} > 0
-\end{equation*}
-
-Therefore, $h$ is strictly convex and the maximum can only be at the boundary points.
-\end{proof}
-
-We now demonstrate that the choice of $i$ is not unique in the above theorem. 
-The simplest case will be $x_i=x_j$ for any $i$ and any $j$. 
-For a nontrivial example, let $\alpha = 5$, $n = 3$.
-If $x=(2,3,4)$, then the maximum likelihood estimate is one of $\{2,3,4\}$.
-An estimate of $3$ or $4$ yields maximum likelihood $\frac{8}{375}$ while an estimate of $2$ yields likelihood $\frac{16}{1125}$.
-Therefore, the maximum likelihood estimate can be $3$ or $4$ and is not unique.
-
-Finally, the additional example $x=(1,2,4)$, estimate $\theta=1,2,4$ gives likelihood $\frac{3}{250}, \frac{4}{375}, \frac{1}{125}$
-repsectively. We conclude that $\theta=1$ is the maximum likelihood estimate in this case.////
 \end{CJK*}
 \end{document}

@@ -1,15 +1,21 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\section{Exercice 1c}
+\section*{Exercice 1c}
 \begin{CJK*}{UTF8}{gbsn}
 Soit $X$, $Y$ et $Z$ trois variables aléatoires à valeur $\mathbb{R}$ définies sur
-l'espace de probabilité commune $(\Omega, \mathcal{F}, \mathbb{P})$ telles que :
+l'espace de probabilité commune $(\Omega, F, P)$ telles que :
 
 \begin{enumerate}
-    \item La probabilité conditionnelle régulière $\mu_{Y \mid X, Z}(\omega, \cdot)$ est la loi de Poisson avec paramètre 
-    $\exp(\beta_0 + \beta_1 X(\omega) + \beta_2 Z(\omega))$ pour tout $\omega \in \Omega$, 
-    où $\beta_0$, $\beta_1$ et $\beta_2$ sont des constantes réelles.
+    \item Pour tout $\omega \in \Omega$, la probabilité conditionnelle régulière $\mu_{Y \mid X, Z}(\omega, \cdot)$ 
+    est la loi de Poisson avec paramètre:
+
+    \begin{equation*}
+        \exp(\beta_0 + \beta_1 X(\omega) + \beta_2 Z(\omega))
+    \end{equation*} 
+
+    Où $\beta_0$, $\beta_1$ et $\beta_2$ sont des constantes réelles.
+
     \item On a :
     
     \begin{equation*}
